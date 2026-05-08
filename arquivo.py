@@ -3,5 +3,5 @@ def Mensagem_Boas_Vindas(nome):
 
 
 if __name__ == "__main__":
-    nome = input("Digite seu nome: ")
+    nome = "Teste Github Actions"
     Mensagem_Boas_Vindas(nome)
