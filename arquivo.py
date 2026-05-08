@@ -5,5 +5,4 @@ def Mensagem_Boas_Vindas(nome):
 if __name__ == "__main__":
     nome = "Teste Github Actions"
     Mensagem_Boas_Vindas(nome)
-    print{ adwadwadawdwa }
-    v = main@kkkkkkkk
+    
