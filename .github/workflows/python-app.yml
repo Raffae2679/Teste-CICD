@@ -1,0 +1,26 @@
+name: Meu Primeiro CI Python
+
+# Dispara a action sempre que houver um push na branch main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  testar-codigo:
+    runs-on: ubuntu-latest # Usa uma máquina Linux virtual do próprio GitHub
+
+    steps:
+    # Passo 1: Baixa o seu código do repositório para a máquina virtual
+    - name: Clonando o repositório
+      uses: actions/checkout@v4
+
+    # Passo 2: Instala o Python na máquina virtual
+    - name: Configurando o Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    # Passo 3: Executa o seu arquivo!
+    - name: Executando o script
+      run: |
+        python arquivo.py
