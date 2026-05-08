@@ -4,6 +4,8 @@ name: Meu Primeiro CI Python
 on:
   push:
     branches: [ "main" ]
+  pull_request: # <--- Adicione isso!
+    branches: [ "main" ]
 
 jobs:
   testar-codigo:
