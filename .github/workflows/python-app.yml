@@ -51,16 +51,18 @@ jobs:
     steps:
       - name: Identificando a Branch e Configurando a Pasta Local
         id: config
+        shell: bash # <--- ADICIONE ESTA LINHA AQUI
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
             echo "BRANCH=main" >> $GITHUB_ENV
-            echo "PATH_LOCAL=C:\meu_projeto_main" >> $GITHUB_ENV 
+            echo "PATH_LOCAL=C:/meu_projeto_main" >> $GITHUB_ENV # <-- Use barra normal /
           elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             echo "BRANCH=dev" >> $GITHUB_ENV
-            echo "PATH_LOCAL=C:\meu_projeto_dev" >> $GITHUB_ENV
+            echo "PATH_LOCAL=C:/meu_projeto_dev" >> $GITHUB_ENV # <-- Use barra normal /
           fi
 
       - name: Atualizando os arquivos no PC
+        shell: bash # <--- ADICIONE ESTA LINHA AQUI TAMBÉM
         run: |
           cd ${{ env.PATH_LOCAL }}
           git fetch origin
