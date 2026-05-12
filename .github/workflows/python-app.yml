@@ -43,26 +43,23 @@ jobs:
   # -------------------------------------------------------------
   # JOB 2: DEPLOY CONTÍNUO (CD)
   # -------------------------------------------------------------
-  deploy-servidores-fisicos: # <--- AGORA ESTÁ ALINHADO CORRETAMENTE AQUI!
+  deploy-servidores-fisicos:
     needs: integracao-continua 
     runs-on: self-hosted 
     if: github.event_name == 'push' 
 
     steps:
       - name: Identificando a Branch e Configurando a Pasta Local
-        id: config
-        shell: bash # <--- ADICIONE ESTA LINHA AQUI
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "BRANCH=main" >> $GITHUB_ENV
-            echo "PATH_LOCAL=C:/meu_projeto_main" >> $GITHUB_ENV # <-- Use barra normal /
-          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            echo "BRANCH=dev" >> $GITHUB_ENV
-            echo "PATH_LOCAL=C:/meu_projeto_dev" >> $GITHUB_ENV # <-- Use barra normal /
-          fi
+          if ("${{ github.ref }}" -eq "refs/heads/main") {
+            echo "BRANCH=main" >> $env:GITHUB_ENV
+            echo "PATH_LOCAL=C:\Users\dutrarmd\Desktop\meu_projeto_main" >> $env:GITHUB_ENV
+          } elseif ("${{ github.ref }}" -eq "refs/heads/dev") {
+            echo "BRANCH=dev" >> $env:GITHUB_ENV
+            echo "PATH_LOCAL=C:\Users\dutrarmd\Desktop\meu_projeto_dev" >> $env:GITHUB_ENV
+          }
 
       - name: Atualizando os arquivos no PC
-        shell: bash # <--- ADICIONE ESTA LINHA AQUI TAMBÉM
         run: |
           cd ${{ env.PATH_LOCAL }}
           git fetch origin
