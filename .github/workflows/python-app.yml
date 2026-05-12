@@ -1,28 +1,52 @@
-name: Meu Primeiro CI Python
+name: Pipeline Profissional Completo
 
-# Dispara a action sempre que houver um push na branch main
 on:
   push:
-    branches: [ "main" ]
-  pull_request: # <--- Adicione isso!
+    branches: [ "main", "dev" ]
+  pull_request:
     branches: [ "main" ]
 
 jobs:
-  testar-codigo:
-    runs-on: ubuntu-latest # Usa uma máquina Linux virtual do próprio GitHub
+  # -------------------------------------------------------------
+  # JOB 1: QUALIDADE E SEGURANÇA (CI)
+  # -------------------------------------------------------------
+  integracao-continua:
+    runs-on: ubuntu-latest
 
     steps:
-    # Passo 1: Baixa o seu código do repositório para a máquina virtual
-    - name: Clonando o repositório
-      uses: actions/checkout@v4
+      - name: 1. Clonando o código
+        uses: actions/checkout@v4
 
-    # Passo 2: Instala o Python na máquina virtual
-    - name: Configurando o Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
+      - name: 2. Configurando o Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11" # Ajuste para a versão que você usa
 
-    # Passo 3: Executa o seu arquivo!
-    - name: Executando o script
-      run: |
-        python arquivo.py
+      - name: 3. Instalando ferramentas do pipeline
+        # Aqui instalamos os "fiscais" antes de rodar o código
+        run: |
+          python -m pip install --upgrade pip
+          pip install black flake8 bandit
+          # Quando tiver um projeto real, descomente a linha abaixo:
+          # pip install -r requirements.txt
+
+      - name: 4. Padronização de Código (Black)
+        # O argumento --check faz o pipeline falhar se o código estiver fora do padrão
+        run: black --check .
+
+      - name: 5. Qualidade e Sintaxe (Flake8)
+        # Procura por variáveis não usadas ou erros lógicos de sintaxe
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: 6. Varredura de Segurança (Bandit)
+        # Procura falhas como senhas expostas no código ou injeção de comandos
+        run: bandit -r . -c "bandit.yml" || bandit -r .
+
+      - name: 7. Executando Testes
+        # Se os fiscais acima aprovarem, finalmente rodamos o seu script/testes
+        run: |
+          python arquivo.py 
+          # No seu projeto web oficial, o comando seria parecido com:
+          # python manage.py test
+
+  
