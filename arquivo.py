@@ -3,7 +3,7 @@ def Mensagem_Boas_Vindas(nome):
 
 
 def Teste_concluido():
-    print("Teste concluído com sucesso!")
+    print("Teste concluído com sucesso - CD operacional papai!")
 
 
 if __name__ == "__main__":

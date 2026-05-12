@@ -49,4 +49,27 @@ jobs:
           # No seu projeto web oficial, o comando seria parecido com:
           # python manage.py test
 
-  
+deploy-servidores-fisicos:
+    needs: integracao-continua 
+    runs-on: self-hosted # O GitHub agora vai procurar o seu PC
+    if: github.event_name == 'push' 
+
+    steps:
+      - name: Identificando a Branch e Configurando a Pasta Local
+        id: config
+        # Esse passo define qual pasta no seu PC vai ser atualizada
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "BRANCH=main" >> $GITHUB_ENV
+            echo "PATH_LOCAL=C:\meu_projeto_main" >> $GITHUB_ENV 
+          elif [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            echo "BRANCH=dev" >> $GITHUB_ENV
+            echo "PATH_LOCAL=C:\meu_projeto_dev" >> $GITHUB_ENV
+          fi
+        # Nota: Se você usar Linux, mude o PATH_LOCAL para ~/meu_projeto_main
+
+      - name: Atualizando os arquivos no PC
+        # O runner entra na pasta e puxa as novidades do repositório
+        run: |
+          cd ${{ env.PATH_LOCAL }}
+          git fetch origin
